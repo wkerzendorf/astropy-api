@@ -29,8 +29,15 @@ class BlackBody(modeling.Model):
 
 
 
-mybb = BlackBody()
-mybb.temperature = 10000
+>>> mybb = BlackBody()
+>>> mybb.temperature = 10000
+>>> mybb.temperature
+<Quantity 10000 K>
+>>> mybb = BlackBoddy(temperature=1000)
+>>> mybb = BlackBoddy(temperature=500*u.Celsius) #let's pretend that u.Celsius exists
+>>> mybb.temperature
+<Quantity 773.15 K>
+
 intensity = mybb(1 * u.angstrom)
 
 #I feel that in this API one can immediately see from the Model definition what this models does. What it's inputs and
@@ -42,12 +49,12 @@ intensity = mybb(1 * u.angstrom)
 #For models with multiple parameters like Polynomials there's a class for Parameter sets.
 
 class Poly1DModel(modeling.Model):
-
-    c = ParameterSet(5, syntax='_%s', unit=None, equivalency=None, fixed=False, tied=False, bounds=())
+    # ParameterSet -> ParameterCollection due to naming conflict
+    c = ParameterCollection(5, syntax='_%s', unit=None, equivalency=None, fixed=False, tied=False, bounds=())
 
 mylittlepoly = Poly1DModel()
 mylittlepoly.c_0 = 10.
-mylittlepoly.fixed
+mylittlepoly.c_0.fixed
 False
 
 #I'm happy to try to implement this, but would need some help with the python magic.
